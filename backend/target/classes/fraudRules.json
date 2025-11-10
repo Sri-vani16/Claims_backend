@@ -1,0 +1,116 @@
+{
+  "fraudDetectionRules": [
+    {
+      "ruleId": "FD001",
+      "ruleName": "Duplicate Claims",
+      "description": "Detects duplicate claims for the same incident or policyholder within a short time frame.",
+      "conditions": {
+        "policyNumber": "same",
+        "dateOfIncident": "within_15_days",
+        "claimType": "same"
+      },
+      "severity": "high",
+      "weight": 90,
+      "action": "flag_for_manual_review",
+      "enabled": true
+    },
+    {
+      "ruleId": "FD002",
+      "ruleName": "Stolen Vehicle Recently Insured",
+      "description": "Claim filed for theft of a vehicle insured within the last 30 days.",
+      "conditions": {
+        "policyStartDate": "within_30_days_of_claim",
+        "claimType": "vehicle_theft"
+      },
+      "severity": "medium",
+      "weight": 70,
+      "action": "flag_for_investigation",
+      "enabled": true
+    },
+    {
+      "ruleId": "FD003",
+      "ruleName": "Unusual Claim Time",
+      "description": "Claim incident time is during odd hours (e.g., 12 AM - 4 AM).",
+      "conditions": {
+        "incidentTime": {
+          "between": ["00:00", "04:00"]
+        }
+      },
+      "severity": "low",
+      "weight": 40,
+      "action": "flag_for_review",
+      "enabled": true
+    },
+    {
+      "ruleId": "FD004",
+      "ruleName": "Frequent Claims",
+      "description": "More than 3 claims filed within the last 12 months by the same policyholder.",
+      "conditions": {
+        "claimsInLast12Months": {
+          "greater_than": 3
+        }
+      },
+      "severity": "medium",
+      "weight": 60,
+      "action": "flag_for_pattern_analysis",
+      "enabled": true
+    },
+    {
+      "ruleId": "FD005",
+      "ruleName": "Delayed Claim Filing",
+      "description": "Claim filed more than 60 days after incident date without valid justification.",
+      "conditions": {
+        "daysSinceIncident": {
+          "greater_than": 60
+        },
+        "justificationProvided": false
+      },
+      "severity": "medium",
+      "weight": 65,
+      "action": "flag_for_delay_investigation",
+      "enabled": true
+    },
+    {
+      "ruleId": "FD006",
+      "ruleName": "Invalid Police Report",
+      "description": "Police report number or station does not exist or is unverifiable.",
+      "conditions": {
+        "policeReportVerified": false
+      },
+      "severity": "high",
+      "weight": 95,
+      "action": "flag_for_fraud",
+      "enabled": true
+    },
+    {
+      "ruleId": "FD007",
+      "ruleName": "High Claim Amount vs Policy Sum Insured",
+      "description": "Claim amount is close to or exceeds the sum insured within the first few months of policy start.",
+      "conditions": {
+        "claimAmountToSumInsuredRatio": {
+          "greater_than": 0.9
+        },
+        "policyAgeInDays": {
+          "less_than": 90
+        }
+      },
+      "severity": "high",
+      "weight": 88,
+      "action": "flag_for_financial_review",
+      "enabled": true
+    },
+    {
+      "ruleId": "FD008",
+      "ruleName": "Inconsistent Claimant Information",
+      "description": "Claimant name, phone number, or email is different from policyholder without valid documentation.",
+      "conditions": {
+        "claimantIdentityMismatch": true,
+        "supportingDocuments": false
+      },
+      "severity": "medium",
+      "weight": 70,
+      "action": "flag_for_identity_verification",
+      "enabled": true
+    }
+  ]
+}
