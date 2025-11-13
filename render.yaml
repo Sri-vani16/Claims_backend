@@ -3,8 +3,6 @@ services:
   - type: web
     name: claims-backend
     env: docker
-    dockerfilePath: ./Dockerfile
-    dockerContext: ./backend
     plan: free
     envVars:
       - key: SPRING_PROFILES_ACTIVE
@@ -27,17 +25,3 @@ services:
         value: "true"
       - key: MAIL_STARTTLS
         value: "true"
-
-  # Frontend Service
-  - type: web
-    name: claims-frontend
-    env: docker
-    dockerfilePath: ./Dockerfile
-    dockerContext: ./frontend
-    plan: free
-    envVars:
-      - key: BACKEND_URL
-        fromService:
-          type: web
-          name: claims-backend
-          property: host

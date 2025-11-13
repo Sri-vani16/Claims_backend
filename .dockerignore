@@ -1,0 +1,8 @@
+frontend/
+backend/target/
+!backend/target/fraud-detection-1.0.0.jar
+.git
+.gitignore
+README.md
+backend/logs/
+*.log
