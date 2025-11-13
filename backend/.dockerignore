@@ -1,0 +1,9 @@
+target/
+!target/fraud-detection-1.0.0.jar
+.git
+.gitignore
+README.md
+Dockerfile
+.dockerignore
+logs/
+*.log

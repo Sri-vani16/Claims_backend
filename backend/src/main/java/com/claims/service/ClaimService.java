@@ -9,6 +9,7 @@ import com.claims.repository.PolicyRepository;
 import com.claims.rules.FraudDetectionEngine;
 import com.claims.rules.FraudDetectionResult;
 import com.claims.email.EmailService;
+import com.claims.monitoring.JobMonitoringService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
@@ -28,20 +29,29 @@ public class ClaimService {
     private final PolicyRepository policyRepository;
     private final FraudDetectionEngine fraudDetectionEngine;
     private final EmailService emailService;
+    private final JobMonitoringService jobMonitoringService;
     
     public ClaimService(ClaimRepository claimRepository, PolicyRepository policyRepository, 
-                       FraudDetectionEngine fraudDetectionEngine, EmailService emailService) {
+                       FraudDetectionEngine fraudDetectionEngine, EmailService emailService,
+                       JobMonitoringService jobMonitoringService) {
         this.claimRepository = claimRepository;
         this.policyRepository = policyRepository;
         this.fraudDetectionEngine = fraudDetectionEngine;
         this.emailService = emailService;
+        this.jobMonitoringService = jobMonitoringService;
     }
     
     @Transactional
     public ClaimSubmissionResponse submitClaim(ClaimSubmissionRequest request) {
-        // Validate policy
-        Policy policy = policyRepository.findByPolicyNumber(request.getPolicyNumber())
-            .orElseThrow(() -> new RuntimeException("Policy not found"));
+        String jobId = jobMonitoringService.startJob("CLAIM_SUBMISSION", 
+            "Processing claim for policy: " + request.getPolicyNumber());
+        
+        try {
+            log.info("Starting claim submission - JobID: {}, Policy: {}", jobId, request.getPolicyNumber());
+            
+            // Validate policy
+            Policy policy = policyRepository.findByPolicyNumber(request.getPolicyNumber())
+                .orElseThrow(() -> new RuntimeException("Policy not found"));
         
         // Validate policy is active and covers incident date
         if (!"ACTIVE".equals(policy.getStatus())) {
@@ -93,22 +103,34 @@ public class ClaimService {
         
         claim = claimRepository.save(claim);
         
-        // Send email alert if high risk
-        if (fraudResult.getFraudScore() > 75) {
-            emailService.sendFraudAlert(claim, fraudResult.getFraudFlags());
-            log.info("High risk claim detected (score: {}), sending email alert", fraudResult.getFraudScore());
+            // Send email alert if high risk
+            if (fraudResult.getFraudScore() > 75) {
+                emailService.sendFraudAlert(claim, fraudResult.getFraudFlags());
+                log.info("High risk claim detected (score: {}), sending email alert", fraudResult.getFraudScore());
+            }
+            
+            List<String> fraudFlags = fraudResult.getFraudFlags().stream()
+                .map(flag -> flag.getRuleCode() + ": " + flag.getRuleName())
+                .collect(Collectors.toList());
+            
+            jobMonitoringService.completeJob(jobId, 
+                "Claim processed successfully - Reference: " + claim.getClaimReferenceNumber() + 
+                ", Fraud Score: " + fraudResult.getFraudScore());
+            
+            log.info("Claim submission completed - JobID: {}, Reference: {}, FraudScore: {}", 
+                jobId, claim.getClaimReferenceNumber(), fraudResult.getFraudScore());
+            
+            return new ClaimSubmissionResponse(
+                claim.getClaimReferenceNumber(),
+                fraudResult.getFraudScore(),
+                fraudFlags,
+                claim.getStatus()
+            );
+        } catch (Exception e) {
+            jobMonitoringService.failJob(jobId, "Claim submission failed: " + e.getMessage(), e);
+            log.error("Claim submission failed - JobID: {}, Error: {}", jobId, e.getMessage(), e);
+            throw e;
         }
-        
-        List<String> fraudFlags = fraudResult.getFraudFlags().stream()
-            .map(flag -> flag.getRuleCode() + ": " + flag.getRuleName())
-            .collect(Collectors.toList());
-        
-        return new ClaimSubmissionResponse(
-            claim.getClaimReferenceNumber(),
-            fraudResult.getFraudScore(),
-            fraudFlags,
-            claim.getStatus()
-        );
     }
     
     private String generateClaimReferenceNumber() {
