@@ -51,6 +51,32 @@ public class EmailService {
         }
     }
     
+    public void testEmailFailure() {
+        String jobId = jobMonitoringService.startJob("EMAIL_FAILURE_TEST", "Testing email failure scenario");
+        
+        try {
+            // Simulate email server timeout
+            Thread.sleep(100);
+            throw new RuntimeException("SMTP server connection timeout - Unable to connect to smtp.gmail.com:587");
+        } catch (Exception e) {
+            jobMonitoringService.failJob(jobId, "Email server connection failed", e);
+            log.error("JobID: {} - Simulated email failure", jobId, e);
+        }
+    }
+    
+    public void testDatabaseFailure() {
+        String jobId = jobMonitoringService.startJob("DATABASE_FAILURE_TEST", "Testing database connection failure");
+        
+        try {
+            // Simulate database connection failure
+            Thread.sleep(50);
+            throw new RuntimeException("Database connection pool exhausted - Max connections: 10, Active: 10");
+        } catch (Exception e) {
+            jobMonitoringService.failJob(jobId, "Database connection pool exhausted", e);
+            log.error("JobID: {} - Simulated database failure", jobId, e);
+        }
+    }
+    
     @Async
     public void sendFraudAlert(Claim claim, List<FraudFlag> fraudFlags) {
         String jobId = jobMonitoringService.startJob("EMAIL_FRAUD_ALERT", 

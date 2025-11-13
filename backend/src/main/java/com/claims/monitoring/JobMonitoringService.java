@@ -83,4 +83,15 @@ public class JobMonitoringService {
             log.info("Job marked for rerun - ID: {}", jobId);
         }
     }
+    
+    public void simulateFraudDetectionFailure() {
+        String jobId = startJob("FRAUD_DETECTION_FAILURE", "Testing fraud detection engine failure");
+        
+        try {
+            Thread.sleep(200);
+            throw new RuntimeException("Fraud rules engine timeout - Rule evaluation exceeded 30 seconds");
+        } catch (Exception e) {
+            failJob(jobId, "Fraud detection engine failure", e);
+        }
+    }
 }

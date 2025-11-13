@@ -39,6 +39,27 @@ public class ClaimController {
         return ResponseEntity.ok("Test email sent! Check your inbox.");
     }
     
+    @PostMapping("/test-failures")
+    public ResponseEntity<Map<String, String>> generateTestFailures() {
+        // Test invalid policy claim
+        try {
+            ClaimSubmissionRequest invalidRequest = new ClaimSubmissionRequest();
+            invalidRequest.setPolicyNumber("INVALID123");
+            invalidRequest.setClaimType("Auto");
+            claimService.submitClaim(invalidRequest);
+        } catch (Exception e) {
+            // Expected failure
+        }
+        
+        // Test email failure
+        emailService.testEmailFailure();
+        
+        // Test database failure
+        emailService.testDatabaseFailure();
+        
+        return ResponseEntity.ok(Map.of("message", "Test failures generated"));
+    }
+    
     @PostMapping("/submit")
     @Operation(summary = "Submit a new claim", description = "Submit a new insurance claim with fraud detection")
     public ResponseEntity<ClaimSubmissionResponse> submitClaim(@Valid @RequestBody ClaimSubmissionRequest request) {
