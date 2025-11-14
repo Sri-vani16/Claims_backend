@@ -1,8 +1,0 @@
-services:
-  - type: web
-    name: claims-frontend
-    env: docker
-    plan: free
-    envVars:
-      - key: REACT_APP_API_URL
-        value: https://claims-backend.onrender.com/api

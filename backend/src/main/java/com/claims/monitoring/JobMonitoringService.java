@@ -14,9 +14,11 @@ public class JobMonitoringService {
     private static final Logger log = LoggerFactory.getLogger(JobMonitoringService.class);
     
     private final JobLogRepository jobLogRepository;
+    private final LogReaderService logReaderService;
     
-    public JobMonitoringService(JobLogRepository jobLogRepository) {
+    public JobMonitoringService(JobLogRepository jobLogRepository, LogReaderService logReaderService) {
         this.jobLogRepository = jobLogRepository;
+        this.logReaderService = logReaderService;
     }
     
     public String startJob(String jobType, String message) {
@@ -36,7 +38,7 @@ public class JobMonitoringService {
             jobLog.setMessage(message);
             jobLogRepository.save(jobLog);
             
-            log.info("Job completed - ID: {}, Message: {}", jobId, message);
+            log.info("Job completed - ID: {}, Type: {}, Message: {}", jobId, jobLog.getJobType(), message);
         }
     }
     
@@ -49,17 +51,33 @@ public class JobMonitoringService {
             jobLog.setErrorDetails(exception != null ? exception.getMessage() : null);
             jobLogRepository.save(jobLog);
             
-            log.error("Job failed - ID: {}, Error: {}", jobId, errorMessage, exception);
+            log.error("Job failed - ID: {}, Type: {}, Error: {}", jobId, jobLog.getJobType(), errorMessage, exception);
+            logReaderService.appendJobLog(jobId, jobLog.getJobType(), "ERROR", errorMessage, exception);
         }
     }
     
     public JobLog getJobStatus(String jobId) {
-        return jobLogRepository.findByJobId(jobId).orElse(null);
+        JobLog jobLog = jobLogRepository.findByJobId(jobId).orElse(null);
+        if (jobLog != null && jobLog.getStatus() == JobStatus.FAILED) {
+            String logDetails = logReaderService.getErrorLogs(jobId, jobLog.getStartTime(), jobLog.getEndTime());
+            if (logDetails != null) {
+                jobLog.setErrorDetails(logDetails);
+            }
+        }
+        return jobLog;
     }
     
     public List<JobLog> getFailedJobs(int hours) {
         LocalDateTime since = LocalDateTime.now().minusHours(hours);
-        return jobLogRepository.findFailedJobsSince(since);
+        List<JobLog> failedJobs = jobLogRepository.findFailedJobsSince(since);
+        
+        for (JobLog job : failedJobs) {
+            String logDetails = logReaderService.getErrorLogs(job.getJobId(), job.getStartTime(), job.getEndTime());
+            if (logDetails != null) {
+                job.setErrorDetails(logDetails);
+            }
+        }
+        return failedJobs;
     }
     
     public void assignJob(String jobId, String assignee) {
@@ -84,14 +102,7 @@ public class JobMonitoringService {
         }
     }
     
-    public void simulateFraudDetectionFailure() {
-        String jobId = startJob("FRAUD_DETECTION_FAILURE", "Testing fraud detection engine failure");
-        
-        try {
-            Thread.sleep(200);
-            throw new RuntimeException("Fraud rules engine timeout - Rule evaluation exceeded 30 seconds");
-        } catch (Exception e) {
-            failJob(jobId, "Fraud detection engine failure", e);
-        }
+    public List<JobLog> getAllJobs() {
+        return jobLogRepository.findAll();
     }
 }

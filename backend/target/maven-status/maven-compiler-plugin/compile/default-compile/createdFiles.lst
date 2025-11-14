@@ -1,10 +1,13 @@
 com\claims\monitoring\JobMonitoringService.class
 com\claims\entity\FraudFlag.class
+com\claims\monitoring\JobBotController.class
 com\claims\rules\FraudDetectionEngine$1.class
 com\claims\dto\ClaimSubmissionResponse.class
+com\claims\monitoring\JobDataInitializer.class
 com\claims\dto\ClaimSubmissionRequest.class
 com\claims\config\DataInitializer.class
 com\claims\repository\PolicyRepository.class
+com\claims\controller\HomeController.class
 com\claims\entity\Policy.class
 com\claims\monitoring\JobLog.class
 com\claims\entity\Investigator.class
@@ -13,7 +16,9 @@ com\claims\repository\InvestigatorRepository.class
 com\claims\rules\FraudDetectionEngine.class
 com\claims\repository\ClaimRepository.class
 com\claims\email\EmailService.class
+com\claims\monitoring\JobBotService$1.class
 com\claims\monitoring\JobMonitoringController.class
+com\claims\monitoring\LogReaderService.class
 com\claims\controller\ClaimController.class
 com\claims\service\ClaimService.class
 com\claims\rules\FraudRule.class
@@ -22,3 +27,4 @@ com\claims\ClaimsFraudDetectionApplication.class
 com\claims\entity\Claim.class
 com\claims\monitoring\JobStatus.class
 com\claims\repository\FraudFlagRepository.class
+com\claims\monitoring\JobBotService.class

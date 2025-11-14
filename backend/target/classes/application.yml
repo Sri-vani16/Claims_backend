@@ -1,16 +1,16 @@
 spring:
   datasource:
-    url: jdbc:h2:mem:testdb
+    url: ${DATABASE_URL:jdbc:h2:mem:testdb}
     driver-class-name: org.h2.Driver
-    username: sa
-    password:
+    username: ${DB_USERNAME:sa}
+    password: ${DB_PASSWORD:}
   
   h2:
     console:
-      enabled: ${H2_CONSOLE_ENABLED:true}
+      enabled: ${H2_CONSOLE_ENABLED:false}
       path: /h2-console
       settings:
-        web-allow-others: true
+        web-allow-others: ${H2_WEB_ALLOW_OTHERS:false}
         trace: false
   
   jpa:
@@ -40,12 +40,16 @@ spring:
         debug: true
 
 server:
-  port: 8080
+  port: ${PORT:8080}
 
 logging:
   level:
     com.claims: DEBUG
     org.springframework.mail: DEBUG
+  file:
+    name: logs/application.log
+  pattern:
+    file: "%d{yyyy-MM-dd HH:mm:ss} [%thread] %-5level %logger{36} - %msg%n"
 
 springdoc:
   api-docs:

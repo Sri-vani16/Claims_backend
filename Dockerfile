@@ -2,19 +2,14 @@
 FROM maven:3.9.4-eclipse-temurin-17-alpine AS build
 
 # Set working directory
-WORKDIR /app
+WORKDIR /build
 
-# Copy pom.xml from backend
+# Copy backend files
 COPY backend/pom.xml .
-
-# Download dependencies
-RUN mvn dependency:go-offline -B
-
-# Copy source code from backend
 COPY backend/src ./src
 
 # Build the application
-RUN mvn clean package -DskipTests
+RUN mvn clean package -DskipTests -q
 
 # Runtime stage
 FROM eclipse-temurin:17-jre-alpine
@@ -23,7 +18,7 @@ FROM eclipse-temurin:17-jre-alpine
 WORKDIR /app
 
 # Copy jar from build stage
-COPY --from=build /app/target/fraud-detection-1.0.0.jar app.jar
+COPY --from=build /build/target/*.jar app.jar
 
 # Create logs directory
 RUN mkdir -p logs
@@ -31,9 +26,8 @@ RUN mkdir -p logs
 # Expose port
 EXPOSE 8080
 
-# Set environment variables
-ENV SPRING_PROFILES_ACTIVE=prod
-ENV SERVER_PORT=8080
+# Set JVM options for container
+ENV JAVA_OPTS="-Xmx512m -Xms256m"
 
 # Run the application
-CMD ["java", "-jar", "app.jar"]
+CMD ["sh", "-c", "java $JAVA_OPTS -jar app.jar"]

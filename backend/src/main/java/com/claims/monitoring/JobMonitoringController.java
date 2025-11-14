@@ -57,4 +57,10 @@ public class JobMonitoringController {
             "timestamp", java.time.LocalDateTime.now()
         ));
     }
+    
+    @GetMapping("/jobs")
+    public ResponseEntity<List<JobLog>> getAllJobs() {
+        List<JobLog> allJobs = jobMonitoringService.getAllJobs();
+        return ResponseEntity.ok(allJobs);
+    }
 }

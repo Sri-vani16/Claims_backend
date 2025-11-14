@@ -46,6 +46,10 @@ logging:
   level:
     com.claims: DEBUG
     org.springframework.mail: DEBUG
+  file:
+    name: logs/application.log
+  pattern:
+    file: "%d{yyyy-MM-dd HH:mm:ss} [%thread] %-5level %logger{36} - %msg%n"
 
 springdoc:
   api-docs:

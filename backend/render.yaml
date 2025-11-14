@@ -17,9 +17,9 @@ services:
       - key: MAIL_PORT
         value: "587"
       - key: MAIL_USERNAME
-        value: srivanivadthya@gmail.com
+        # Set this in Render dashboard
       - key: MAIL_PASSWORD
-        value: fuowdnyqcwfajcpj
+        # Set this in Render dashboard
       - key: MAIL_AUTH
         value: "true"
       - key: MAIL_STARTTLS
