@@ -20,7 +20,6 @@ import java.util.Map;
 
 @RestController
 @RequestMapping("/api/claims")
-@CrossOrigin(origins = "*")
 @Tag(name = "Claims", description = "Claims management API")
 public class ClaimController {
     

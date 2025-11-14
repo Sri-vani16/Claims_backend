@@ -41,6 +41,10 @@ spring:
 
 server:
   port: ${PORT:8080}
+  forward-headers-strategy: framework
+  servlet:
+    context-path: /
+  use-forward-headers: true
 
 logging:
   level:
@@ -61,4 +65,6 @@ springdoc:
     try-it-out-enabled: true
     operations-sorter: method
     tags-sorter: alpha
+    disable-swagger-default-url: true
   show-actuator: false
+  use-fqn: true

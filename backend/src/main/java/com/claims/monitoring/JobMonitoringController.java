@@ -13,7 +13,6 @@ import java.util.Map;
 
 @RestController
 @RequestMapping("/api/monitoring")
-@CrossOrigin(origins = "*")
 @Tag(name = "Job Monitoring", description = "Job monitoring and management API")
 public class JobMonitoringController {
     
@@ -86,5 +85,15 @@ public class JobMonitoringController {
     public ResponseEntity<List<JobLog>> getAllJobs() {
         List<JobLog> allJobs = jobMonitoringService.getAllJobs();
         return ResponseEntity.ok(allJobs);
+    }
+    
+    @GetMapping("/test")
+    @Operation(summary = "Test monitoring API", description = "Simple test endpoint for monitoring API")
+    @ApiResponse(responseCode = "200", description = "Monitoring API is working")
+    public ResponseEntity<Map<String, String>> testMonitoring() {
+        return ResponseEntity.ok(Map.of(
+            "message", "Monitoring API is working!",
+            "timestamp", java.time.LocalDateTime.now().toString()
+        ));
     }
 }

@@ -27,8 +27,7 @@ public class SwaggerConfig {
                                 .name("Claims Team")
                                 .email("srivanivadthya@gmail.com")))
                 .servers(List.of(
-                        new Server().url("http://localhost:" + serverPort).description("Local server"),
-                        new Server().url("/").description("Production server")
+                        new Server().url("/").description("Current server")
                 ));
     }
 }

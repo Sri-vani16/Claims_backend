@@ -58,3 +58,15 @@ java.lang.IllegalArgumentException: Invalid regex pattern in rule FR-2024-001
 java.lang.RuntimeException: HTTP 503 Service Unavailable
 	at com.claims.payment.PaymentGateway.processPayment(PaymentGateway.java:156)
 	at com.claims.service.PaymentService.processPayment(PaymentService.java:89)
+2025-11-14 13:51:05 [main] ERROR com.claims.monitoring.JobMonitoringService - Job failed - ID: cca14907-129f-4d0d-aa68-4aa372a678b0, Type: CLAIM_PROCESSING, Error: Database connection timeout
+java.lang.RuntimeException: Connection timeout after 30 seconds
+	at com.claims.db.ConnectionPool.getConnection(ConnectionPool.java:45)
+	at com.claims.service.ClaimService.processClaimData(ClaimService.java:123)
+2025-11-14 13:51:05 [main] ERROR com.claims.monitoring.JobMonitoringService - Job failed - ID: 10ae21d3-f274-4cdc-a6ca-3f6ffccc1885, Type: FRAUD_DETECTION, Error: Rule engine compilation error
+java.lang.IllegalArgumentException: Invalid regex pattern in rule FR-2024-001
+	at java.util.regex.Pattern.compile(Pattern.java:1955)
+	at com.claims.fraud.RuleEngine.compileRule(RuleEngine.java:78)
+2025-11-14 13:51:05 [main] ERROR com.claims.monitoring.JobMonitoringService - Job failed - ID: 242ea26d-a351-4282-ab2c-dd57d23b4238, Type: PAYMENT_PROCESSING, Error: Payment gateway unavailable
+java.lang.RuntimeException: HTTP 503 Service Unavailable
+	at com.claims.payment.PaymentGateway.processPayment(PaymentGateway.java:156)
+	at com.claims.service.PaymentService.processPayment(PaymentService.java:89)

@@ -20,6 +20,7 @@ com\claims\email\EmailService.class
 com\claims\monitoring\JobBotService$1.class
 com\claims\monitoring\JobMonitoringController.class
 com\claims\monitoring\LogReaderService.class
+com\claims\config\CorsConfig.class
 com\claims\controller\ClaimController.class
 com\claims\service\ClaimService.class
 com\claims\rules\FraudRule.class

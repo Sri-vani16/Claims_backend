@@ -12,7 +12,7 @@ import java.util.Map;
 @Tag(name = "System", description = "System information and health endpoints")
 public class HomeController {
     
-    @GetMapping("/")
+    @GetMapping("/api")
     @Operation(summary = "API Information", description = "Get system information and available endpoints")
     @ApiResponse(responseCode = "200", description = "System information retrieved")
     public Map<String, Object> home() {
@@ -36,5 +36,10 @@ public class HomeController {
     @ApiResponse(responseCode = "200", description = "Service is healthy")
     public Map<String, String> health() {
         return Map.of("status", "UP");
+    }
+    
+    @GetMapping("/")
+    public String root() {
+        return "redirect:/swagger-ui.html";
     }
 }
