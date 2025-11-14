@@ -3,17 +3,11 @@ FROM node:18-alpine as build
 
 WORKDIR /app
 
-# Copy package files
-COPY package*.json ./
-
-# Install dependencies
-RUN npm ci --only=production
-
-# Copy source code
+# Copy all files
 COPY . .
 
-# Build the app
-RUN npm run build
+# Install dependencies and build
+RUN npm install && npm run build
 
 # Production stage
 FROM nginx:alpine
