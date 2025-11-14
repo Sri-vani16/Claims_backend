@@ -5,7 +5,11 @@ import com.claims.dto.ClaimSubmissionResponse;
 import com.claims.service.ClaimService;
 import com.claims.email.EmailService;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -29,17 +33,23 @@ public class ClaimController {
     }
     
     @GetMapping("/test")
+    @Operation(summary = "Test API connectivity", description = "Simple endpoint to verify API is running")
+    @ApiResponse(responseCode = "200", description = "API is working")
     public ResponseEntity<String> test() {
         return ResponseEntity.ok("Claims API is working!");
     }
     
     @GetMapping("/test-email")
+    @Operation(summary = "Test email service", description = "Send a test email to verify email configuration")
+    @ApiResponse(responseCode = "200", description = "Test email sent successfully")
     public ResponseEntity<String> testEmail() {
         emailService.sendTestEmail();
         return ResponseEntity.ok("Test email sent! Check your inbox.");
     }
     
     @PostMapping("/test-failures")
+    @Operation(summary = "Generate test failures", description = "Create sample failure scenarios for testing monitoring")
+    @ApiResponse(responseCode = "200", description = "Test failures generated")
     public ResponseEntity<Map<String, String>> generateTestFailures() {
         // Test invalid policy claim
         try {
@@ -61,7 +71,13 @@ public class ClaimController {
     }
     
     @PostMapping("/submit")
-    @Operation(summary = "Submit a new claim", description = "Submit a new insurance claim with fraud detection")
+    @Operation(summary = "Submit a new claim", description = "Submit a new insurance claim with automatic fraud detection")
+    @ApiResponses(value = {
+        @ApiResponse(responseCode = "200", description = "Claim submitted successfully",
+                content = @Content(schema = @Schema(implementation = ClaimSubmissionResponse.class))),
+        @ApiResponse(responseCode = "400", description = "Invalid request data"),
+        @ApiResponse(responseCode = "500", description = "Internal server error")
+    })
     public ResponseEntity<ClaimSubmissionResponse> submitClaim(@Valid @RequestBody ClaimSubmissionRequest request) {
         ClaimSubmissionResponse response = claimService.submitClaim(request);
         return ResponseEntity.ok(response);

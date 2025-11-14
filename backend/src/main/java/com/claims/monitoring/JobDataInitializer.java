@@ -14,7 +14,12 @@ public class JobDataInitializer implements CommandLineRunner {
     
     @Override
     public void run(String... args) {
-        createSampleJobs();
+        try {
+            createSampleJobs();
+        } catch (Exception e) {
+            // Sample data creation failed - not critical for application startup
+            System.out.println("Sample job data initialization failed: " + e.getMessage());
+        }
     }
     
     private void createSampleJobs() {

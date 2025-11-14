@@ -1,16 +1,20 @@
 package com.claims.dto;
 
+import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.*;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.LocalTime;
 
+@Schema(description = "Request object for submitting a new insurance claim")
 public class ClaimSubmissionRequest {
+    @Schema(description = "Policy number", example = "POL12345678", required = true)
     @NotBlank(message = "Policy number is required")
     @Pattern(regexp = "^(POL\\d{8}|INS-\\d{9})$", message = "Invalid policy number format")
     private String policyNumber;
     
+    @Schema(description = "Type of claim", example = "Auto", required = true)
     @NotBlank(message = "Claim type is required")
     private String claimType;
     
@@ -52,6 +56,7 @@ public class ClaimSubmissionRequest {
     @Email(message = "Invalid email format")
     private String email;
     
+    @Schema(description = "Claim amount", example = "15000.00")
     @DecimalMin(value = "0.01", message = "Claim amount must be positive")
     private BigDecimal claimAmount;
     

@@ -504,3 +504,67 @@ java.lang.RuntimeException: HTTP 503 Service Unavailable
 2025-11-14 12:15:33.131 [main] INFO  - Job completed - ID: 7addca86-ec92-4878-8eea-75ef60fde848, Type: DOCUMENT_VALIDATION, Message: Documents validated successfully
 2025-11-14 12:15:33.137 [main] INFO  - Job started - ID: 3c0ab746-ffc8-4209-beac-950594b04d09, Type: EMAIL_NOTIFICATION, Message: Sending notifications
 2025-11-14 12:15:33.145 [main] INFO  - Job completed - ID: 3c0ab746-ffc8-4209-beac-950594b04d09, Type: EMAIL_NOTIFICATION, Message: Notifications sent successfully
+2025-11-14 13:04:36.760 [main] INFO  - Job started - ID: 7d160540-1fd4-454e-90ab-348bc1277c56, Type: CLAIM_PROCESSING, Message: Processing claim data
+2025-11-14 13:04:36.888 [main] ERROR - Job failed - ID: 7d160540-1fd4-454e-90ab-348bc1277c56, Type: CLAIM_PROCESSING, Error: Database connection timeout
+java.lang.RuntimeException: Connection timeout after 30 seconds
+	at com.claims.monitoring.JobDataInitializer.createSampleJobs(JobDataInitializer.java:28)
+	at com.claims.monitoring.JobDataInitializer.run(JobDataInitializer.java:18)
+	at org.springframework.boot.SpringApplication.callRunner(SpringApplication.java:786)
+	at org.springframework.boot.SpringApplication.lambda$callRunners$3(SpringApplication.java:770)
+	at java.base/java.util.stream.ForEachOps$ForEachOp$OfRef.accept(ForEachOps.java:186)
+	at java.base/java.util.stream.SortedOps$SizedRefSortingSink.end(SortedOps.java:357)
+	at java.base/java.util.stream.AbstractPipeline.copyInto(AbstractPipeline.java:571)
+	at java.base/java.util.stream.AbstractPipeline.wrapAndCopyInto(AbstractPipeline.java:560)
+	at java.base/java.util.stream.ForEachOps$ForEachOp.evaluateSequential(ForEachOps.java:153)
+	at java.base/java.util.stream.ForEachOps$ForEachOp$OfRef.evaluateSequential(ForEachOps.java:176)
+	at java.base/java.util.stream.AbstractPipeline.evaluate(AbstractPipeline.java:265)
+	at java.base/java.util.stream.ReferencePipeline.forEach(ReferencePipeline.java:636)
+	at org.springframework.boot.SpringApplication.callRunners(SpringApplication.java:765)
+	at org.springframework.boot.SpringApplication.run(SpringApplication.java:330)
+	at org.springframework.boot.SpringApplication.run(SpringApplication.java:1342)
+	at org.springframework.boot.SpringApplication.run(SpringApplication.java:1331)
+	at com.claims.ClaimsFraudDetectionApplication.main(ClaimsFraudDetectionApplication.java:11)
+2025-11-14 13:04:36.896 [main] INFO  - Job started - ID: 5bb4a7c4-1a2c-4a5c-bd01-002dd6a26ec2, Type: FRAUD_DETECTION, Message: Running fraud detection
+2025-11-14 13:04:36.905 [main] ERROR - Job failed - ID: 5bb4a7c4-1a2c-4a5c-bd01-002dd6a26ec2, Type: FRAUD_DETECTION, Error: Rule engine compilation error
+java.lang.IllegalArgumentException: Invalid regex pattern in rule FR-2024-001
+	at com.claims.monitoring.JobDataInitializer.createSampleJobs(JobDataInitializer.java:32)
+	at com.claims.monitoring.JobDataInitializer.run(JobDataInitializer.java:18)
+	at org.springframework.boot.SpringApplication.callRunner(SpringApplication.java:786)
+	at org.springframework.boot.SpringApplication.lambda$callRunners$3(SpringApplication.java:770)
+	at java.base/java.util.stream.ForEachOps$ForEachOp$OfRef.accept(ForEachOps.java:186)
+	at java.base/java.util.stream.SortedOps$SizedRefSortingSink.end(SortedOps.java:357)
+	at java.base/java.util.stream.AbstractPipeline.copyInto(AbstractPipeline.java:571)
+	at java.base/java.util.stream.AbstractPipeline.wrapAndCopyInto(AbstractPipeline.java:560)
+	at java.base/java.util.stream.ForEachOps$ForEachOp.evaluateSequential(ForEachOps.java:153)
+	at java.base/java.util.stream.ForEachOps$ForEachOp$OfRef.evaluateSequential(ForEachOps.java:176)
+	at java.base/java.util.stream.AbstractPipeline.evaluate(AbstractPipeline.java:265)
+	at java.base/java.util.stream.ReferencePipeline.forEach(ReferencePipeline.java:636)
+	at org.springframework.boot.SpringApplication.callRunners(SpringApplication.java:765)
+	at org.springframework.boot.SpringApplication.run(SpringApplication.java:330)
+	at org.springframework.boot.SpringApplication.run(SpringApplication.java:1342)
+	at org.springframework.boot.SpringApplication.run(SpringApplication.java:1331)
+	at com.claims.ClaimsFraudDetectionApplication.main(ClaimsFraudDetectionApplication.java:11)
+2025-11-14 13:04:36.911 [main] INFO  - Job started - ID: 9bc764d4-0ee1-4433-b9d8-dbf20e70821c, Type: PAYMENT_PROCESSING, Message: Processing payment
+2025-11-14 13:04:36.919 [main] ERROR - Job failed - ID: 9bc764d4-0ee1-4433-b9d8-dbf20e70821c, Type: PAYMENT_PROCESSING, Error: Payment gateway unavailable
+java.lang.RuntimeException: HTTP 503 Service Unavailable
+	at com.claims.monitoring.JobDataInitializer.createSampleJobs(JobDataInitializer.java:36)
+	at com.claims.monitoring.JobDataInitializer.run(JobDataInitializer.java:18)
+	at org.springframework.boot.SpringApplication.callRunner(SpringApplication.java:786)
+	at org.springframework.boot.SpringApplication.lambda$callRunners$3(SpringApplication.java:770)
+	at java.base/java.util.stream.ForEachOps$ForEachOp$OfRef.accept(ForEachOps.java:186)
+	at java.base/java.util.stream.SortedOps$SizedRefSortingSink.end(SortedOps.java:357)
+	at java.base/java.util.stream.AbstractPipeline.copyInto(AbstractPipeline.java:571)
+	at java.base/java.util.stream.AbstractPipeline.wrapAndCopyInto(AbstractPipeline.java:560)
+	at java.base/java.util.stream.ForEachOps$ForEachOp.evaluateSequential(ForEachOps.java:153)
+	at java.base/java.util.stream.ForEachOps$ForEachOp$OfRef.evaluateSequential(ForEachOps.java:176)
+	at java.base/java.util.stream.AbstractPipeline.evaluate(AbstractPipeline.java:265)
+	at java.base/java.util.stream.ReferencePipeline.forEach(ReferencePipeline.java:636)
+	at org.springframework.boot.SpringApplication.callRunners(SpringApplication.java:765)
+	at org.springframework.boot.SpringApplication.run(SpringApplication.java:330)
+	at org.springframework.boot.SpringApplication.run(SpringApplication.java:1342)
+	at org.springframework.boot.SpringApplication.run(SpringApplication.java:1331)
+	at com.claims.ClaimsFraudDetectionApplication.main(ClaimsFraudDetectionApplication.java:11)
+2025-11-14 13:04:36.926 [main] INFO  - Job started - ID: 497131ab-42ce-43c1-81a0-743b0ca938a2, Type: DOCUMENT_VALIDATION, Message: Validating documents
+2025-11-14 13:04:36.935 [main] INFO  - Job completed - ID: 497131ab-42ce-43c1-81a0-743b0ca938a2, Type: DOCUMENT_VALIDATION, Message: Documents validated successfully
+2025-11-14 13:04:36.940 [main] INFO  - Job started - ID: 02691983-be32-4437-8c53-3d87faff1a4a, Type: EMAIL_NOTIFICATION, Message: Sending notifications
+2025-11-14 13:04:36.946 [main] INFO  - Job completed - ID: 02691983-be32-4437-8c53-3d87faff1a4a, Type: EMAIL_NOTIFICATION, Message: Notifications sent successfully
